@@ -4,63 +4,59 @@ import { useSetAtom } from "jotai";
 import { CanvasStateModifier, ModalProps, NodeType } from "../atoms/types";
 import { ModalData } from "../atoms/modal";
 
-export type DeclarationNodeProps = {
-  variableName: string | null,
-  initialValue: string | null,
+export type OutputNodeProps = {
+    value: string | null,
 };
 
-export function NewDeclarationNode(id: string, x: number, y: number): Node {
+export function NewOutputNode(id: string, x: number, y: number): Node {
   return {
     id: id,
-    type: "DeclarationNode",
+    type: "OutputNode",
     data: {
-      variableName: null,
-      initialValue: null,
+        value: null,
     },
     position: { x, y },
   };
 }
 
-export function DeclarationNode(props: NodeProps<DeclarationNodeProps>) {
+export function OutputNode(props: NodeProps<OutputNodeProps>) {
   return (
     <>
       <Handle className="p-1" type="target" position={Position.Top} id="a" />
       <div
         className={
-          "p-3 border rounded shadow w-[200px] bg-white" +
+          "p-3 border rounded shadow w-[200px] bg-blue-400" +
           (props.selected ? " outline outline-black outline-2" : "")
         }
       >
-        {props.data.variableName == null ? (
+        {props.data.value == null ? (
           <span className="absolute p-1 text-xs font-bold text-white bg-red-600 rounded -top-2 -right-2">
             Unset
           </span>
         ) : (
           <></>
         )}
-        <h2 className="block text-lg font-bold">Declaration</h2>
-        <h2>Variable Name: {props.data.variableName ?? "-"} </h2>
-        <p>Initial Value: {props.data.initialValue ?? "-"}</p>
+        <h2 className="block text-lg font-bold">Output</h2>
+        <h2>Value: {props.data.value ?? "-"} </h2>
       </div>
       <Handle className="p-1" type="source" id="b" position={Position.Bottom} />
     </>
   );
 }
 
-export function OnAddDeclarationNode({ setNodes }: CanvasStateModifier, viewport: Viewport) {
+export function OnAddOutputNode({ setNodes }: CanvasStateModifier, viewport: Viewport) {
   return () => {
-    const node = NewDeclarationNode(
+    const node = NewOutputNode(
       crypto.randomUUID(),
-      viewport.x / 2.0 + 20,
-      viewport.y / 2.0 + 20,
+      viewport.x,
+      viewport.y
     );
     setNodes((nds) => [...nds, node]);
   };
 }
 
-export function DeclarationNodeModal({ node, modifier: { setNodes } }: ModalProps) {
+export function OutputNodeModal({ node, modifier: { setNodes } }: ModalProps) {
   const setModal = useSetAtom(ModalData);
-  const [name, setName] = useState<string>(node.data?.variableName ?? "");
   const [value, setValue] = useState<string>(node.data?.initialValue ?? "");
 
   const onSubmit = (_: MouseEvent) => {
@@ -70,8 +66,7 @@ export function DeclarationNodeModal({ node, modifier: { setNodes } }: ModalProp
           return {
             ...e,
             data: {
-              variableName: name,
-              initialValue: value,
+              value: value,
             },
           };
         }
@@ -90,16 +85,9 @@ export function DeclarationNodeModal({ node, modifier: { setNodes } }: ModalProp
       <div className="flex flex-col space-y-5">
         <input
           type="text"
-          value={name}
-          onInput={(e) => setName(e.currentTarget.value)}
-          placeholder="Variable Name"
-          className="p-2 border border-black rounded"
-        />
-        <input
-          type="text"
           value={value}
           onInput={(e) => setValue(e.currentTarget.value)}
-          placeholder="Initial Value"
+          placeholder="Value"
           className="p-2 border border-black rounded"
         />
         <button

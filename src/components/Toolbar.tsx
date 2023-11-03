@@ -19,16 +19,10 @@ export default function Toolbar({ modifier }: ToolbarProps): JSX.Element {
           + Declaration
         </button>
         <button
-          className="p-3 bg-orange-300 rounded shadow"
-          onClick={OnAddTypeFactory("DeclarationNode", modifier, viewport)}
+          className="p-3 bg-blue-400 rounded shadow"
+          onClick={OnAddTypeFactory("OutputNode", modifier, viewport)}
         >
-          + Declaration
-        </button>
-        <button
-          className="p-3 bg-orange-300 rounded shadow"
-          onClick={OnAddTypeFactory("DeclarationNode", modifier, viewport)}
-        >
-          + Declaration
+          + Output
         </button>
       </div>
     </Panel>

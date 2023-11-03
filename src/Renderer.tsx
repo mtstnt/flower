@@ -26,8 +26,10 @@ export default function Renderer() {
   const modifier: CanvasStateModifier = { setNodes, setEdges, nodes, edges };
 
   const onConnect = (connection: Connection) => {
-    setEdges((eds) =>
-      addEdge(
+    const source = connection.source;
+    setEdges((eds) => {
+      eds = eds.filter(e => e.source != source)
+      return addEdge(
         {
           ...connection,
           type: "step",
@@ -37,9 +39,11 @@ export default function Renderer() {
             width: 50,
             height: 50,
           },
+          deletable: true,
         },
         eds
       )
+    }
     );
   };
 
@@ -70,7 +74,7 @@ export default function Renderer() {
             connectionLineType={ConnectionLineType.Step}
             selectionMode={SelectionMode.Partial}
             onNodeContextMenu={onNodeContextMenu}
-            onEdgeClick={() => {}}
+            onEdgeClick={(event, edge) => console.log("Edge", event, edge)}
             onNodeClick={() => {}}
             fitView
           >

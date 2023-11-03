@@ -6,15 +6,18 @@ import {
 } from "./DeclarationNode";
 import { CanvasStateModifier } from "../atoms/types";
 import { Node, Viewport } from "reactflow";
+import { OnAddOutputNode, OutputNode, OutputNodeModal } from "./OutputNode";
 
 export enum NodeTypes {
   DeclarationNode = "DeclarationNode",
   InputNode = "InputNode",
   TypeNode = "TypeNode",
+  OutputNode = "OutputNode",
 }
 
 export const nodeTypesMap = {
   [NodeTypes.DeclarationNode]: DeclarationNode,
+  [NodeTypes.OutputNode]: OutputNode,
 };
 
 /**
@@ -27,6 +30,8 @@ export function modalComponentFactory(
   switch (node.type ?? "") {
     case "DeclarationNode":
       return <DeclarationNodeModal node={node} modifier={modifier} />;
+    case "OutputNode":
+      return <OutputNodeModal node={node} modifier={modifier} />;
     case "InputNode":
       return <>Input Node</>;
     case "IfNode":
@@ -39,12 +44,14 @@ export function modalComponentFactory(
 
 export function OnAddTypeFactory(
   type: string,
-  { setNodes }: CanvasStateModifier,
+  modifier: CanvasStateModifier,
   viewport: Viewport
 ): MouseEventHandler {
   switch (type) {
     case "DeclarationNode":
-      return OnAddDeclarationNode(setNodes, viewport);
+      return OnAddDeclarationNode(modifier, viewport);
+    case "OutputNode":
+      return OnAddOutputNode(modifier, viewport);
   }
   return () => {};
 }
