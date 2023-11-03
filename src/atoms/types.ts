@@ -3,6 +3,16 @@ import { Edge, Node } from "reactflow";
 
 type Nullable<T> = T | null;
 
+/**
+ * Wrapper type to contain canvas modifier functions and variables to be passed to needed components.
+ */
+export type CanvasStateModifier = {
+    nodes: NodeType[],
+    edges: EdgeType[],
+    setNodes: SetNodeType,
+    setEdges: SetEdgeType,
+}
+
 export type ModalDataType = {
     data?: Nullable<any>,
     content: Nullable<JSX.Element>,

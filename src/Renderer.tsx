@@ -4,7 +4,6 @@ import ReactFlow, {
   useEdgesState,
   Connection,
   addEdge,
-  useViewport,
   MiniMap,
   Controls,
   ConnectionLineType,
@@ -13,27 +12,18 @@ import ReactFlow, {
   Node,
 } from "reactflow";
 import "reactflow/dist/style.css";
-import { NodeTypes, getModalComponentByType } from "./nodes/Node";
-import {
-  NewDeclarationNode,
-} from "./nodes/DeclarationNode";
+import { nodeTypesMap, modalComponentFactory } from "./nodes/Node";
 import { useSetAtom } from "jotai";
 import { ModalData } from "./atoms/modal";
+import Toolbar from "./components/Toolbar";
+import { CanvasStateModifier } from "./atoms/types";
 
 export default function Renderer() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const viewport = useViewport();
   const setModal = useSetAtom(ModalData);
 
-  const onAddDeclarationNode = () => {
-    const node = NewDeclarationNode(
-      crypto.randomUUID(),
-      viewport.x / 2.0,
-      viewport.y / 2.0
-    );
-    setNodes((nds) => [...nds, node]);
-  };
+  const modifier: CanvasStateModifier = { setNodes, setEdges, nodes, edges };
 
   const onConnect = (connection: Connection) => {
     setEdges((eds) =>
@@ -55,7 +45,7 @@ export default function Renderer() {
   const onNodeContextMenu = (event: MouseEvent, node: Node) => {
     event.preventDefault();
     event.stopPropagation();
-    const nodeModalComponent = getModalComponentByType(node, setNodes, setEdges);
+    const nodeModalComponent = modalComponentFactory(node, modifier);
     setModal({
       content: nodeModalComponent,
       isShowing: true,
@@ -64,13 +54,11 @@ export default function Renderer() {
 
   return (
     <>
-      <button className="p-3 bg-orange-300" onClick={onAddDeclarationNode}>
-        Add Declaration
-      </button>
-      <div className="h-[500px] border w-full">
+      <Toolbar modifier={modifier} />
+      <div className="w-full h-screen border">
         <div className="w-full h-full">
           <ReactFlow
-            nodeTypes={NodeTypes}
+            nodeTypes={nodeTypesMap}
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}

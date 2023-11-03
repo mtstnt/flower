@@ -1,24 +1,56 @@
-import type { JSX } from 'react';
-import { DeclarationNode, DeclarationNodeModal } from "./DeclarationNode";
-import { SetEdgeType, SetNodeType } from '../atoms/types';
-import { Node } from 'reactflow';
+import type { JSX, MouseEventHandler } from "react";
+import {
+  DeclarationNode,
+  DeclarationNodeModal,
+  OnAddDeclarationNode,
+} from "./DeclarationNode";
+import { CanvasStateModifier } from "../atoms/types";
+import { Node, Viewport } from "reactflow";
 
-export const NodeTypes = {
-    DeclarationNode: DeclarationNode,
+export enum NodeTypes {
+  DeclarationNode = "DeclarationNode",
+  InputNode = "InputNode",
+  TypeNode = "TypeNode",
 }
 
-// Get a modal component to render on the modal based on the node's `type` property.
-export function getModalComponentByType(
-    node: Node,
-    setNodes: SetNodeType,
-    setEdges: SetEdgeType,
+export const nodeTypesMap = {
+  [NodeTypes.DeclarationNode]: DeclarationNode,
+};
+
+/**
+ * Get a modal component to render on the modal based on the node's `type` property.
+ */
+export function modalComponentFactory(
+  node: Node,
+  { setNodes, setEdges } : CanvasStateModifier,
 ): JSX.Element {
-    switch (node.type ?? "") {
-        case "DeclarationNode":
-            return <DeclarationNodeModal node={node} setNodes={setNodes} setEdges={setEdges} />;
-        case "InputNode": return <>Input Node</>;
-        case "IfNode": return <>If Node</>;
-        case "ExpressionNode": return <>Expr Node</>;
-    }
-    return <></>
+  switch (node.type ?? "") {
+    case "DeclarationNode":
+      return (
+        <DeclarationNodeModal
+          node={node}
+          setNodes={setNodes}
+          setEdges={setEdges}
+        />
+      );
+    case "InputNode":
+      return <>Input Node</>;
+    case "IfNode":
+      return <>If Node</>;
+    case "ExpressionNode":
+      return <>Expr Node</>;
+  }
+  return <></>;
+}
+
+export function OnAddTypeFactory(
+  type: string,
+  { setNodes }: CanvasStateModifier,
+  viewport: Viewport
+): MouseEventHandler {
+  switch (type) {
+    case "DeclarationNode":
+      return OnAddDeclarationNode(setNodes, viewport);
+  }
+  return () => {};
 }

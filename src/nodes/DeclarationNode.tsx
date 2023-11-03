@@ -1,7 +1,7 @@
 import { MouseEvent, useState } from "react";
-import { Handle, Node, NodeProps, Position } from "reactflow";
+import { Handle, Node, NodeProps, Position, Viewport } from "reactflow";
 import { useSetAtom } from "jotai";
-import { ModalProps, NodeType } from "../atoms/types";
+import { ModalProps, NodeType, SetNodeType } from "../atoms/types";
 import { ModalData } from "../atoms/modal";
 
 export function NewDeclarationNode(id: string, x: number, y: number): Node {
@@ -40,6 +40,17 @@ export function DeclarationNode(props: NodeProps) {
       <Handle className="p-1" type="source" id="b" position={Position.Bottom} />
     </>
   );
+}
+
+export function OnAddDeclarationNode(setNodes: SetNodeType, viewport: Viewport) {
+  return () => {
+    const node = NewDeclarationNode(
+      crypto.randomUUID(),
+      viewport.x / 2.0,
+      viewport.y / 2.0
+    );
+    setNodes((nds) => [...nds, node]);
+  };
 }
 
 export function DeclarationNodeModal({ node, setNodes }: ModalProps) {
