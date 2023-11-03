@@ -17,9 +17,7 @@ export default function App() {
       <Modal content={modal.content} visible={modal.isShowing} />
       <div className="container w-8/12 mx-auto">
         <h1 className="text-3xl font-bold">Flower</h1>
-        <div className="w-full h-[500px] border">
-          <Renderer />
-        </div>
+        <Renderer />
       </div>
     </div>
   );

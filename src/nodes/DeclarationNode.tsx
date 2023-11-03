@@ -1,29 +1,71 @@
 import { MouseEvent, useState } from "react";
-import { Handle, NodeProps, Position } from "reactflow";
+import { Handle, Node, NodeProps, Position } from "reactflow";
 import { useSetAtom } from "jotai";
-import { ModalData, ModalProps } from "../atoms/modal";
+import { ModalProps, NodeType } from "../atoms/types";
+import { ModalData } from "../atoms/modal";
 
-function DeclarationNodeModal({ nodeId }: ModalProps) {
+export function NewDeclarationNode(id: string, x: number, y: number): Node {
+  return {
+    id: id,
+    type: "DeclarationNode",
+    data: {
+      variableName: null,
+      initialValue: null,
+    },
+    position: { x, y },
+  };
+}
+
+export function DeclarationNode(props: NodeProps) {
+  return (
+    <>
+      <Handle className="p-1" type="target" position={Position.Top} id="a" />
+      <div
+        className={
+          "p-3 border rounded shadow min-w-[15rem] bg-white" +
+          (props.selected ? " outline outline-black outline-2" : "")
+        }
+      >
+        {props.data?.variableName == null ? (
+          <span className="absolute p-1 text-xs font-bold text-white bg-red-600 rounded -top-2 -right-2">
+            Unset
+          </span>
+        ) : (
+          <></>
+        )}
+        <h2 className="block text-lg font-bold">Variable Declaration</h2>
+        <h2>Variable Name: {props.data?.variableName ?? "Unset"} </h2>
+        <p>Initial Value: {props.data?.initialValue ?? "No initial value"}</p>
+      </div>
+      <Handle className="p-1" type="source" id="b" position={Position.Bottom} />
+    </>
+  );
+}
+
+export function DeclarationNodeModal({ node, setNodes }: ModalProps) {
   const setModal = useSetAtom(ModalData);
-  const [name, setName] = useState<string>("");
-  const [value, setValue] = useState<string>("");
+  const [name, setName] = useState<string>(node.data?.variableName ?? "");
+  const [value, setValue] = useState<string>(node.data?.initialValue ?? "");
 
-  const onSubmit = () => {
-    document.dispatchEvent(
-      new CustomEvent("flower:updateNode", {
-        bubbles: true,
-        cancelable: false,
-        detail: {
-          id: nodeId,
-          name: name,
-          value: value,
-        },
-      })
-    );
+  const onSubmit = (_: MouseEvent) => {
+    setNodes((nodes: NodeType[]): NodeType[] => {
+      return nodes.map((e) => {
+        if (e.id == node.id) {
+          return {
+            ...e,
+            data: {
+              variableName: name,
+              initialValue: value,
+            },
+          };
+        }
+        return e;
+      });
+    });
     setModal({
       content: null,
       isShowing: false,
-    })
+    });
   };
 
   return (
@@ -52,38 +94,5 @@ function DeclarationNodeModal({ nodeId }: ModalProps) {
         </button>
       </div>
     </div>
-  );
-}
-
-export default function DeclarationNode(props: NodeProps) {
-  const setModal = useSetAtom(ModalData);
-  const onShowContextMenu = (event: MouseEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    setModal({
-      content: <DeclarationNodeModal nodeId={props.id} />,
-      isShowing: true,
-    });
-  };
-
-  return (
-    <>
-      <Handle type="target" position={Position.Top} id="a" />
-      <div
-        className="p-3 border rounded shadow min-w-[15rem]"
-        onContextMenu={onShowContextMenu}
-      >
-        {props.data?.variableName == null ? (
-          <span className="absolute p-1 text-xs font-bold text-white bg-red-600 rounded -top-2 -right-2">
-            Unset
-          </span>
-        ) : (
-          <></>
-        )}
-        <h2 className="block text-lg font-bold">Variable Declaration</h2>
-        <h2>Variable Name: {props.data?.variableName ?? "Unset"} </h2>
-        <p>Initial Value: {props.data?.initialValue ?? "No initial value"}</p>
-      </div>
-      <Handle type="source" id="b" position={Position.Bottom} />
-    </>
   );
 }
