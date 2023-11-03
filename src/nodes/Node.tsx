@@ -7,17 +7,23 @@ import {
 import { CanvasStateModifier } from "../atoms/types";
 import { Node, Viewport } from "reactflow";
 import { OnAddOutputNode, OutputNode, OutputNodeModal } from "./OutputNode";
+import { StartNode } from "./StartNode";
+import { EndNode } from "./EndNode";
 
 export enum NodeTypes {
   DeclarationNode = "DeclarationNode",
   InputNode = "InputNode",
   TypeNode = "TypeNode",
   OutputNode = "OutputNode",
-}
+  StartNode = "StartNode",
+  EndNode = "EndNode",
+};
 
 export const nodeTypesMap = {
   [NodeTypes.DeclarationNode]: DeclarationNode,
   [NodeTypes.OutputNode]: OutputNode,
+  [NodeTypes.StartNode]: StartNode,
+  [NodeTypes.EndNode]: EndNode,
 };
 
 /**

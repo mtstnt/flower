@@ -18,8 +18,29 @@ import { ModalData } from "./atoms/modal";
 import Toolbar from "./components/Toolbar";
 import { CanvasStateModifier } from "./atoms/types";
 
+const initialNodes: Node[] = [
+  {
+    id: "start",
+    data: null,
+    position: { x: 0, y: 0 },
+    type: "StartNode",
+    draggable: true,
+    deletable: false,
+    focusable: false,
+  },
+  {
+    id: "end",
+    data: null,
+    position: { x: 0, y: 1200 },
+    type: "EndNode",
+    draggable: true,
+    deletable: false,
+    focusable: false,
+  },
+];
+
 export default function Renderer() {
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const setModal = useSetAtom(ModalData);
 
@@ -68,9 +89,6 @@ export default function Renderer() {
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
             onConnect={onConnect}
-            zoomOnScroll={false}
-            panOnScroll={true}
-            panOnDrag={false}
             connectionLineType={ConnectionLineType.Step}
             selectionMode={SelectionMode.Partial}
             onNodeContextMenu={onNodeContextMenu}
