@@ -29,6 +29,5 @@ export type EdgeType = Edge<any>;
 // ModalProps has the functionalities to manage the state of the Canvas.
 export type ModalProps = {
     node: Node,
-    setNodes: SetNodeType,
-    setEdges: SetEdgeType,
+    modifier: CanvasStateModifier,
 };

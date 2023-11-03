@@ -4,6 +4,11 @@ import { useSetAtom } from "jotai";
 import { ModalProps, NodeType, SetNodeType } from "../atoms/types";
 import { ModalData } from "../atoms/modal";
 
+export type DeclarationNodeProps = {
+  variableName: string | null,
+  initialValue: string | null,
+};
+
 export function NewDeclarationNode(id: string, x: number, y: number): Node {
   return {
     id: id,
@@ -16,7 +21,7 @@ export function NewDeclarationNode(id: string, x: number, y: number): Node {
   };
 }
 
-export function DeclarationNode(props: NodeProps) {
+export function DeclarationNode(props: NodeProps<DeclarationNodeProps>) {
   return (
     <>
       <Handle className="p-1" type="target" position={Position.Top} id="a" />
@@ -26,16 +31,16 @@ export function DeclarationNode(props: NodeProps) {
           (props.selected ? " outline outline-black outline-2" : "")
         }
       >
-        {props.data?.variableName == null ? (
+        {props.data.variableName == null ? (
           <span className="absolute p-1 text-xs font-bold text-white bg-red-600 rounded -top-2 -right-2">
             Unset
           </span>
         ) : (
           <></>
         )}
-        <h2 className="block text-lg font-bold">Variable Declaration</h2>
-        <h2>Variable Name: {props.data?.variableName ?? "Unset"} </h2>
-        <p>Initial Value: {props.data?.initialValue ?? "No initial value"}</p>
+        <h2 className="block text-lg font-bold">Declaration</h2>
+        <h2>Variable Name: {props.data.variableName ?? "Unset"} </h2>
+        <p>Initial Value: {props.data.initialValue ?? "No initial value"}</p>
       </div>
       <Handle className="p-1" type="source" id="b" position={Position.Bottom} />
     </>
@@ -53,7 +58,7 @@ export function OnAddDeclarationNode(setNodes: SetNodeType, viewport: Viewport) 
   };
 }
 
-export function DeclarationNodeModal({ node, setNodes }: ModalProps) {
+export function DeclarationNodeModal({ node, modifier: { setNodes } }: ModalProps) {
   const setModal = useSetAtom(ModalData);
   const [name, setName] = useState<string>(node.data?.variableName ?? "");
   const [value, setValue] = useState<string>(node.data?.initialValue ?? "");
@@ -81,7 +86,7 @@ export function DeclarationNodeModal({ node, setNodes }: ModalProps) {
 
   return (
     <div>
-      <h3 className="mb-5 text-xl font-bold">Variable Declaration</h3>
+      <h3 className="mb-5 text-xl font-bold">Declaration</h3>
       <div className="flex flex-col space-y-5">
         <input
           type="text"

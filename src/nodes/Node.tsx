@@ -22,17 +22,11 @@ export const nodeTypesMap = {
  */
 export function modalComponentFactory(
   node: Node,
-  { setNodes, setEdges } : CanvasStateModifier,
+  modifier: CanvasStateModifier
 ): JSX.Element {
   switch (node.type ?? "") {
     case "DeclarationNode":
-      return (
-        <DeclarationNodeModal
-          node={node}
-          setNodes={setNodes}
-          setEdges={setEdges}
-        />
-      );
+      return <DeclarationNodeModal node={node} modifier={modifier} />;
     case "InputNode":
       return <>Input Node</>;
     case "IfNode":

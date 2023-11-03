@@ -31,6 +31,7 @@ export default function Renderer() {
         {
           ...connection,
           type: "step",
+          animated: true,
           markerEnd: {
             type: MarkerType.ArrowClosed,
             width: 50,
@@ -54,7 +55,6 @@ export default function Renderer() {
 
   return (
     <>
-      <Toolbar modifier={modifier} />
       <div className="w-full h-screen border">
         <div className="w-full h-full">
           <ReactFlow
@@ -74,6 +74,7 @@ export default function Renderer() {
             onNodeClick={() => {}}
             fitView
           >
+            <Toolbar modifier={modifier} />
             <MiniMap />
             <Controls />
           </ReactFlow>
