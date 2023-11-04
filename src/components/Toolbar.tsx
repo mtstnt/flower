@@ -1,6 +1,6 @@
 import { Panel, useViewport } from "reactflow";
 import { CanvasStateModifier } from "../atoms/types";
-import { OnAddTypeFactory } from "../nodes/Node";
+import { onAddTypeFactory } from "../nodes/Node";
 
 type ToolbarProps = {
   modifier: CanvasStateModifier;
@@ -14,13 +14,13 @@ export default function Toolbar({ modifier }: ToolbarProps): JSX.Element {
       <div className="flex flex-row space-x-3">
         <button
           className="p-3 bg-orange-300 rounded shadow"
-          onClick={OnAddTypeFactory("DeclarationNode", modifier, viewport)}
+          onClick={onAddTypeFactory("DeclarationNode", modifier, viewport)}
         >
           + Declaration
         </button>
         <button
           className="p-3 bg-blue-400 rounded shadow"
-          onClick={OnAddTypeFactory("OutputNode", modifier, viewport)}
+          onClick={onAddTypeFactory("OutputNode", modifier, viewport)}
         >
           + Output
         </button>

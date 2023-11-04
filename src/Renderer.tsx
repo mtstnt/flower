@@ -71,9 +71,9 @@ export default function Renderer() {
   const onNodeContextMenu = (event: MouseEvent, node: Node) => {
     event.preventDefault();
     event.stopPropagation();
-    const nodeModalComponent = modalComponentFactory(node, modifier);
+    const modalComp = modalComponentFactory(node, modifier);
     setModal({
-      content: nodeModalComponent,
+      content: modalComp,
       isShowing: true,
     });
   };
@@ -92,10 +92,7 @@ export default function Renderer() {
             connectionLineType={ConnectionLineType.Step}
             selectionMode={SelectionMode.Partial}
             onNodeContextMenu={onNodeContextMenu}
-            onEdgeClick={(event, edge) => console.log("Edge", event, edge)}
-            onNodeClick={() => {}}
-            fitView
-          >
+            fitView>
             <Toolbar modifier={modifier} />
             <MiniMap />
             <Controls />

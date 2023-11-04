@@ -3,16 +3,17 @@ import { Handle, Node, NodeProps, Position, Viewport } from "reactflow";
 import { useSetAtom } from "jotai";
 import { CanvasStateModifier, ModalProps, NodeType } from "../atoms/types";
 import { ModalData } from "../atoms/modal";
+import { NodeTypes } from "./common";
 
 export type DeclarationNodeProps = {
-  variableName: string | null,
-  initialValue: string | null,
+  variableName: Nullable<string>,
+  initialValue: Nullable<string>,
 };
 
-export function NewDeclarationNode(id: string, x: number, y: number): Node {
+export function newDeclarationNodeObject(id: string, x: number, y: number): Node<DeclarationNodeProps> {
   return {
     id: id,
-    type: "DeclarationNode",
+    type: NodeTypes.DeclarationNode,
     data: {
       variableName: null,
       initialValue: null,
@@ -47,9 +48,9 @@ export function DeclarationNode(props: NodeProps<DeclarationNodeProps>) {
   );
 }
 
-export function OnAddDeclarationNode({ setNodes }: CanvasStateModifier, viewport: Viewport) {
+export function onAddDeclarationNode({ setNodes }: CanvasStateModifier, viewport: Viewport) {
   return () => {
-    const node = NewDeclarationNode(
+    const node = newDeclarationNodeObject(
       crypto.randomUUID(),
       viewport.x / 2.0 + 20,
       viewport.y / 2.0 + 20,

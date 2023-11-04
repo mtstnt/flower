@@ -8,7 +8,7 @@ export type OutputNodeProps = {
     value: string | null,
 };
 
-export function NewOutputNode(id: string, x: number, y: number): Node {
+export function newOutputNode(id: string, x: number, y: number): Node<OutputNodeProps> {
   return {
     id: id,
     type: "OutputNode",
@@ -44,9 +44,9 @@ export function OutputNode(props: NodeProps<OutputNodeProps>) {
   );
 }
 
-export function OnAddOutputNode({ setNodes }: CanvasStateModifier, viewport: Viewport) {
+export function onAddOutputNode({ setNodes }: CanvasStateModifier, viewport: Viewport) {
   return () => {
-    const node = NewOutputNode(
+    const node = newOutputNode(
       crypto.randomUUID(),
       viewport.x,
       viewport.y
