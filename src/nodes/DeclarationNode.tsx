@@ -3,7 +3,7 @@ import { Handle, Node, NodeProps, Position, Viewport } from "reactflow";
 import { useSetAtom } from "jotai";
 import { CanvasStateModifier, ModalProps, NodeType } from "../atoms/types";
 import { ModalData } from "../atoms/modal";
-import { NodeTypes } from "./common";
+import { NodeTypes, Nullable } from "./common";
 
 export type DeclarationNodeProps = {
   variableName: Nullable<string>,

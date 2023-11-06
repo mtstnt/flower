@@ -1,6 +1,8 @@
-import { Panel, useViewport } from "reactflow";
+import { Panel, useReactFlow, useViewport } from "reactflow";
 import { CanvasStateModifier } from "../atoms/types";
 import { onAddTypeFactory } from "../nodes/Node";
+import { buildAst } from "../lib/ast";
+import { run } from "../lib/runner";
 
 type ToolbarProps = {
   modifier: CanvasStateModifier;
@@ -8,6 +10,8 @@ type ToolbarProps = {
 
 export default function Toolbar({ modifier }: ToolbarProps): JSX.Element {
   const viewport = useViewport();
+  const { getEdges, getNodes } = useReactFlow();
+
 
   return (
     <Panel position="top-left">
@@ -23,6 +27,12 @@ export default function Toolbar({ modifier }: ToolbarProps): JSX.Element {
           onClick={onAddTypeFactory("OutputNode", modifier, viewport)}
         >
           + Output
+        </button>
+        <button
+          className="p-3 text-black bg-gray-200 rounded shadow"
+          onClick={() => run(getNodes(), getEdges())}
+        >
+          Build AST
         </button>
       </div>
     </Panel>
