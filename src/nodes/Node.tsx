@@ -1,20 +1,18 @@
-import type { JSX, MouseEventHandler } from "react";
-import {
-  DeclarationNode,
-  DeclarationNodeModal,
-  onAddDeclarationNode,
-} from "./DeclarationNode";
+import type { JSX } from "react";
+import { DeclarationNode, DeclarationNodeModal } from "./DeclarationNode";
 import { CanvasStateModifier } from "../atoms/types";
 import { Node, Viewport } from "reactflow";
-import { onAddOutputNode, OutputNode, OutputNodeModal } from "./OutputNode";
+import { OutputNode, OutputNodeModal } from "./OutputNode";
 import { StartNode } from "./StartNode";
 import { EndNode } from "./EndNode";
 import { NodeTypes } from "./common";
+import { IfNode, IfNodeModal } from "./IfNode";
 
 export const nodeTypesMap = {
   [NodeTypes.DeclarationNode]: DeclarationNode,
   [NodeTypes.OutputNode]: OutputNode,
   [NodeTypes.StartNode]: StartNode,
+  [NodeTypes.IfNode]: IfNode,
   [NodeTypes.EndNode]: EndNode,
 };
 
@@ -25,31 +23,38 @@ export function modalComponentFactory(
   node: Node,
   modifier: CanvasStateModifier
 ): JSX.Element {
-  switch (node.type ?? "") {
-    case "DeclarationNode":
+  const type = node.type as keyof typeof NodeTypes;
+  switch (type) {
+    case NodeTypes.DeclarationNode:
       return <DeclarationNodeModal node={node} modifier={modifier} />;
-    case "OutputNode":
+    case NodeTypes.OutputNode:
       return <OutputNodeModal node={node} modifier={modifier} />;
-    case "InputNode":
+    case NodeTypes.IfNode:
+      return <IfNodeModal node={node} modifier={modifier} />;
+    case NodeTypes.InputNode:
       return <>Input Node</>;
-    case "IfNode":
-      return <>If Node</>;
-    case "ExpressionNode":
-      return <>Expr Node</>;
   }
   return <></>;
 }
 
-export function onAddTypeFactory(
-  type: string,
-  modifier: CanvasStateModifier,
-  viewport: Viewport
-): MouseEventHandler {
-  switch (type) {
-    case "DeclarationNode":
-      return onAddDeclarationNode(modifier, viewport);
-    case "OutputNode":
-      return onAddOutputNode(modifier, viewport);
-  }
-  return () => {};
+export function createNodeByType(
+  type: keyof typeof NodeTypes,
+  viewport: Viewport,
+  id: string
+): Node {
+  const data = {
+    [NodeTypes.StartNode]: {},
+    [NodeTypes.EndNode]: {},
+    [NodeTypes.DeclarationNode]: { variableName: null, initialValue: null },
+    [NodeTypes.InputNode]: { variableName: null },
+    [NodeTypes.OutputNode]: { value: null },
+    [NodeTypes.IfNode]: { condition: null },
+  }[type];
+
+  return {
+    id: id,
+    type: type,
+    position: { x: viewport.x / 2.0, y: viewport.y / 2.0 },
+    data: data,
+  };
 }

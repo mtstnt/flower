@@ -5,44 +5,43 @@ import { ModalProps, NodeType } from "../atoms/types";
 import { ModalData } from "../atoms/modal";
 import { Nullable } from "./common";
 
-export type DeclarationNodeProps = {
-  variableName: Nullable<string>;
-  initialValue: Nullable<string>;
+export type IfNodeProps = {
+    condition: Nullable<string>,
 };
 
-export function DeclarationNode(props: NodeProps<DeclarationNodeProps>) {
+export function IfNode(props: NodeProps<IfNodeProps>) {
   return (
     <>
       <Handle className="p-1" type="target" position={Position.Top} id="a" />
       <div
         className={
-          "p-3 border rounded shadow w-[200px] bg-white" +
+          "p-3 border rounded shadow w-[200px] bg-red-300" +
           (props.selected ? " outline outline-black outline-2" : "")
         }
       >
-        {props.data.variableName == null ? (
+        {props.data.condition == null ? (
           <span className="absolute p-1 text-xs font-bold text-white bg-red-600 rounded -top-2 -right-2">
             Unset
           </span>
         ) : (
           <></>
         )}
-        <h2 className="block text-lg font-bold">Declaration</h2>
-        <h2>Variable Name: {props.data.variableName ?? "-"} </h2>
-        <p>Initial Value: {props.data.initialValue ?? "-"}</p>
+        <h2 className="block text-lg">
+            <b>If</b> <br />
+            {props.data.condition ?? "-"}</h2>
+        <div className="absolute -left-10 top-10">False</div>
+        <div className="absolute -right-10 top-10">True</div>
       </div>
-      <Handle className="p-1" type="source" position={Position.Bottom} />
+
+      <Handle className="p-1" type="source" id="FalsePath" position={Position.Left} />
+      <Handle className="p-1" type="source" id="TruePath" position={Position.Right} />
     </>
   );
 }
 
-export function DeclarationNodeModal({
-  node,
-  modifier: { setNodes },
-}: ModalProps) {
+export function IfNodeModal({ node, modifier: { setNodes } }: ModalProps) {
   const setModal = useSetAtom(ModalData);
-  const [name, setName] = useState<string>(node.data?.variableName ?? "");
-  const [value, setValue] = useState<string>(node.data?.initialValue ?? "");
+  const [condition, setCondition] = useState<string>(node.data?.condition ?? "");
 
   const onSubmit = (_: MouseEvent) => {
     setNodes((nodes: NodeType[]): NodeType[] => {
@@ -51,8 +50,7 @@ export function DeclarationNodeModal({
           return {
             ...e,
             data: {
-              variableName: name,
-              initialValue: value,
+              condition: condition,
             },
           };
         }
@@ -71,16 +69,9 @@ export function DeclarationNodeModal({
       <div className="flex flex-col space-y-5">
         <input
           type="text"
-          value={name}
-          onInput={(e) => setName(e.currentTarget.value)}
-          placeholder="Variable Name"
-          className="p-2 border border-black rounded"
-        />
-        <input
-          type="text"
-          value={value}
-          onInput={(e) => setValue(e.currentTarget.value)}
-          placeholder="Initial Value"
+          value={condition}
+          onInput={(e) => setCondition(e.currentTarget.value)}
+          placeholder="Condition"
           className="p-2 border border-black rounded"
         />
         <button

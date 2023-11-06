@@ -1,23 +1,12 @@
 import { MouseEvent, useState } from "react";
-import { Handle, Node, NodeProps, Position, Viewport } from "reactflow";
+import { Handle, NodeProps, Position, } from "reactflow";
 import { useSetAtom } from "jotai";
-import { CanvasStateModifier, ModalProps, NodeType } from "../atoms/types";
+import { ModalProps, NodeType } from "../atoms/types";
 import { ModalData } from "../atoms/modal";
 
 export type OutputNodeProps = {
-    value: string | null,
+  value: string | null;
 };
-
-export function newOutputNode(id: string, x: number, y: number): Node<OutputNodeProps> {
-  return {
-    id: id,
-    type: "OutputNode",
-    data: {
-        value: null,
-    },
-    position: { x, y },
-  };
-}
 
 export function OutputNode(props: NodeProps<OutputNodeProps>) {
   return (
@@ -39,25 +28,14 @@ export function OutputNode(props: NodeProps<OutputNodeProps>) {
         <h2 className="block text-lg font-bold">Output</h2>
         <h2>Value: {props.data.value ?? "-"} </h2>
       </div>
-      <Handle className="p-1" type="source" id="b" position={Position.Bottom} />
+      <Handle className="p-1" type="source" position={Position.Bottom} />
     </>
   );
 }
 
-export function onAddOutputNode({ setNodes }: CanvasStateModifier, viewport: Viewport) {
-  return () => {
-    const node = newOutputNode(
-      crypto.randomUUID(),
-      viewport.x,
-      viewport.y
-    );
-    setNodes((nds) => [...nds, node]);
-  };
-}
-
 export function OutputNodeModal({ node, modifier: { setNodes } }: ModalProps) {
   const setModal = useSetAtom(ModalData);
-  const [value, setValue] = useState<string>(node.data?.initialValue ?? "");
+  const [value, setValue] = useState<string>(node.data?.value ?? "");
 
   const onSubmit = (_: MouseEvent) => {
     setNodes((nodes: NodeType[]): NodeType[] => {
@@ -81,7 +59,7 @@ export function OutputNodeModal({ node, modifier: { setNodes } }: ModalProps) {
 
   return (
     <div>
-      <h3 className="mb-5 text-xl font-bold">Declaration</h3>
+      <h3 className="mb-5 text-xl font-bold">Output</h3>
       <div className="flex flex-col space-y-5">
         <input
           type="text"

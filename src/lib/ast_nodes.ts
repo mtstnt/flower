@@ -20,7 +20,7 @@ declare const addCommands: <N extends string, T extends Record<string, any>>(
 }
 
 export abstract class ASTNode {
-    public next: ASTNode[] = [];
+    public next: Nullable<ASTNode>[] = [];
     abstract validate(): boolean;
 
     constructor(
@@ -36,6 +36,13 @@ export class ASTStartNode extends ASTNode {
 
 export class ASTEndNode extends ASTNode {
     validate(): boolean {
+        return true;
+    }
+}
+
+export class ASTIfNode extends ASTNode {
+    validate(): boolean {
+        // TODO: Validate syntax.
         return true;
     }
 }

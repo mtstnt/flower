@@ -39,24 +39,42 @@ export default function Renderer() {
 
   const onConnect = (connection: Connection) => {
     const source = connection.source;
-    setEdges((eds) => {
-      eds = eds.filter(e => e.source != source)
-      return addEdge(
-        {
-          ...connection,
-          type: "step",
-          animated: true,
-          markerEnd: {
-            type: MarkerType.ArrowClosed,
-            width: 50,
-            height: 50,
+    if (connection.sourceHandle == null) {
+      setEdges((eds) => {
+        eds = eds.filter(e => e.source != source)
+        return addEdge(
+          {
+            ...connection,
+            type: "step",
+            animated: true,
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              width: 50,
+              height: 50,
+            },
+            deletable: true,
           },
-          deletable: true,
-        },
-        eds
-      )
+          eds
+        )
+      });
+    } else {
+      setEdges((eds) => {
+        return addEdge(
+          {
+            ...connection,
+            type: "step",
+            animated: true,
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              width: 50,
+              height: 50,
+            },
+            deletable: true,
+          },
+          eds
+        )
+      });
     }
-    );
   };
 
   const onNodeContextMenu = (event: MouseEvent, node: Node) => {
