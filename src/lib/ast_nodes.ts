@@ -19,13 +19,6 @@ declare const addCommands: <N extends string, T extends Record<string, any>>(
     [K in (string & keyof T) as `${N}_${K}`]: T[K];
 }
 
-type NextConnectionType = {
-    next: Nullable<ASTNode>,
-} | {
-    next0: Nullable<ASTNode>,
-    next1: Nullable<ASTNode>,
-}
-
 export abstract class ASTNode {
     public next: ASTNode[] = [];
     abstract validate(): boolean;

@@ -28,15 +28,6 @@ const initialNodes: Node[] = [
     deletable: false,
     focusable: false,
   },
-  {
-    id: "end",
-    data: null,
-    position: { x: 0, y: 1200 },
-    type: "EndNode",
-    draggable: true,
-    deletable: false,
-    focusable: false,
-  },
 ];
 
 export default function Renderer() {

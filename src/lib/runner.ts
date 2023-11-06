@@ -8,6 +8,8 @@ export function run(nodes: Node[], edges: Edge[]): void {
     const state = {};
     const visitor = new ASTVisitor();
 
+    console.log(ast);
+
     let current: Nullable<ASTNode> = ast;
     while (current != null) {
         switch (current.node.type) {
