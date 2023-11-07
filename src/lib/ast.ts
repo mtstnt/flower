@@ -9,6 +9,19 @@ import { Edge, Node } from "reactflow";
 import { NodeTypes } from "../nodes/common";
 import { ASTDeclarationNode, ASTEndNode, ASTIfNode, ASTNode, ASTOutputNode, ASTStartNode } from './ast_nodes';
 
+function neighbourAstNodeFactory(type: keyof typeof NodeTypes, neighbourNode: Node) {
+    return {
+        [NodeTypes.StartNode]: () => new ASTStartNode(neighbourNode),
+        [NodeTypes.DeclarationNode]: () => new ASTDeclarationNode(neighbourNode),
+        [NodeTypes.OutputNode]: () => new ASTOutputNode(neighbourNode),
+        [NodeTypes.EndNode]: () => new ASTEndNode(neighbourNode),
+        [NodeTypes.IfNode]: () => new ASTIfNode(neighbourNode),
+
+        // TODO: Define AST class for InputNode,
+        [NodeTypes.InputNode]: () => new ASTIfNode(neighbourNode),
+    }[type]();
+}
+
 export function buildPartialAst(current: ASTNode, nodeMap: Dict<Node>, edgeMap: Dict<Dict<Edge>>) {
     const currentNodeId = current.node.id;
     if (edgeMap[currentNodeId] === undefined) return current;
@@ -23,14 +36,8 @@ export function buildPartialAst(current: ASTNode, nodeMap: Dict<Node>, edgeMap: 
             for (let i = 0; i < 2; i++) {
                 const [neighbourID, neighbourEdge] = neighbours[i];
                 const neighbourNode = nodeMap[neighbourID];
-                const neighbourAstNodeFactory = {
-                    [NodeTypes.StartNode]: () => new ASTStartNode(neighbourNode),
-                    [NodeTypes.DeclarationNode]: () => new ASTDeclarationNode(neighbourNode),
-                    [NodeTypes.OutputNode]: () => new ASTOutputNode(neighbourNode),
-                    [NodeTypes.EndNode]: () => new ASTEndNode(neighbourNode),
-                    [NodeTypes.IfNode]: () => new ASTIfNode(neighbourNode),
-                }[neighbourNode.type!];
-                const neighbourASTNode = neighbourAstNodeFactory!();
+                const neighbourType = neighbourNode.id as keyof typeof NodeTypes;
+                const neighbourASTNode = neighbourAstNodeFactory(neighbourType, neighbourNode);
                 if (neighbourEdge.sourceHandle == "TruePath") {
                     current.next[0] = buildPartialAst(neighbourASTNode, nodeMap, edgeMap);
                 } else {
@@ -43,14 +50,8 @@ export function buildPartialAst(current: ASTNode, nodeMap: Dict<Node>, edgeMap: 
             console.log("im here", type, neighbours);
             const [neighbourID, _] = neighbours[0];
             const neighbourNode = nodeMap[neighbourID];
-            const neighbourAstNodeFactory = {
-                [NodeTypes.StartNode]: () => new ASTStartNode(neighbourNode),
-                [NodeTypes.DeclarationNode]: () => new ASTDeclarationNode(neighbourNode),
-                [NodeTypes.OutputNode]: () => new ASTOutputNode(neighbourNode),
-                [NodeTypes.EndNode]: () => new ASTEndNode(neighbourNode),
-                [NodeTypes.IfNode]: () => new ASTIfNode(neighbourNode),
-            }[neighbourNode.type!];
-            const neighbourASTNode = neighbourAstNodeFactory!();
+            const neighbourType = neighbourNode.id as keyof typeof NodeTypes;
+            const neighbourASTNode = neighbourAstNodeFactory(neighbourType, neighbourNode);
             current.next = [buildPartialAst(neighbourASTNode, nodeMap, edgeMap)];
             break;
         }
