@@ -4,6 +4,7 @@ import { run } from "../lib/runner";
 import { MouseEvent } from "react";
 import { NodeTypes } from "../nodes/common";
 import { CanvasStateModifier } from "../atoms/types";
+import { tokenize } from "../lib/expr_tokenizer";
 
 export type ToolbarProps = {
   modifier: CanvasStateModifier,
@@ -16,6 +17,7 @@ export default function Toolbar({ modifier }: ToolbarProps): JSX.Element {
 
   const handleRun = (_: MouseEvent) => {
     try {
+      console.log(tokenize("a&&b||(c&&d) + 10"));
       run(getNodes(), getEdges());
     } catch (e) {
       alert("Exception: " + e);

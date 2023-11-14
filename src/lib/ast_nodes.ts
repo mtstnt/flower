@@ -2,6 +2,9 @@ import { Node } from "reactflow";
 import { DeclarationNodeProps } from "../nodes/DeclarationNode";
 import { OutputNodeProps } from "../nodes/OutputNode";
 import { Nullable } from "../nodes/common";
+import { IfNodeProps } from "../nodes/IfNode";
+import { parse } from "./expr_parser";
+import { tokenize } from "./expr_tokenizer";
 
 export interface ASTNodeVisitor {
     onVisitedStartNode(start: ASTStartNode, state: StateObj): void
@@ -41,6 +44,10 @@ export class ASTEndNode extends ASTNode {
 }
 
 export class ASTIfNode extends ASTNode {
+    constructor(
+        public node: Node<IfNodeProps>,
+    ) { super(node); }
+
     validate(): boolean {
         // TODO: Validate syntax.
         return true;
@@ -86,6 +93,12 @@ export class ASTVisitor implements ASTNodeVisitor {
             throw new Error("Variable with name of " + value! + " not found!");
         }
         alert("Printed: " + state[value!]);
+    }
+
+    onVisitedIfNode(ifNode: ASTIfNode, state: StateObj): void {
+        const condition = ifNode.node.data.condition ?? "";
+        const tokens = tokenize(condition);
+        const conditionAst = parse(tokens);
     }
 
     onVisitedStartNode(_: ASTStartNode, __: StateObj): void {}
