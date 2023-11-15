@@ -36,7 +36,7 @@ export function buildPartialAst(current: ASTNode, nodeMap: Dict<Node>, edgeMap: 
             for (let i = 0; i < 2; i++) {
                 const [neighbourID, neighbourEdge] = neighbours[i];
                 const neighbourNode = nodeMap[neighbourID];
-                const neighbourType = neighbourNode.id as keyof typeof NodeTypes;
+                const neighbourType = neighbourNode.type as keyof typeof NodeTypes;
                 const neighbourASTNode = neighbourAstNodeFactory(neighbourType, neighbourNode);
                 if (neighbourEdge.sourceHandle == "TruePath") {
                     current.next[0] = buildPartialAst(neighbourASTNode, nodeMap, edgeMap);
@@ -50,7 +50,7 @@ export function buildPartialAst(current: ASTNode, nodeMap: Dict<Node>, edgeMap: 
             console.log("im here", type, neighbours);
             const [neighbourID, _] = neighbours[0];
             const neighbourNode = nodeMap[neighbourID];
-            const neighbourType = neighbourNode.id as keyof typeof NodeTypes;
+            const neighbourType = neighbourNode.type as keyof typeof NodeTypes;
             const neighbourASTNode = neighbourAstNodeFactory(neighbourType, neighbourNode);
             current.next = [buildPartialAst(neighbourASTNode, nodeMap, edgeMap)];
             break;

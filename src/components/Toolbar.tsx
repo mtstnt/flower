@@ -16,12 +16,12 @@ export default function Toolbar({ modifier }: ToolbarProps): JSX.Element {
   const { getEdges, getNodes } = useReactFlow();
 
   const handleRun = (_: MouseEvent) => {
-    try {
+    // try {
       console.log(tokenize("a&&b||(c&&d) + 10"));
       run(getNodes(), getEdges());
-    } catch (e) {
-      alert("Exception: " + e);
-    }
+    // } catch (e) {
+    //   alert("Exception: " + e);
+    // }
   };
 
   const handleAddNode = (type: keyof typeof NodeTypes) => {

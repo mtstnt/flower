@@ -99,6 +99,7 @@ export class ASTVisitor implements ASTNodeVisitor {
         const condition = ifNode.node.data.condition ?? "";
         const tokens = tokenize(condition);
         const conditionAst = parse(tokens);
+        // const result = traverse(conditionAst, state);
     }
 
     onVisitedStartNode(_: ASTStartNode, __: StateObj): void {}
