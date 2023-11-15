@@ -3,7 +3,7 @@
 Read: Flow-er
 
 Is a frontend-only Flowchart runner.
-Inspired by Flowgorithm ([https://flowgorithm.org](https://flowgorithm.org))
+Inspired by Flowgorithm ([http://www.flowgorithm.org/](http://www.flowgorithm.org/))
 
 Note for source code readers:
 - The code for the runner part (in the ./src/lib) is quite messy. I'm figuring things out as I go and will refactor it
